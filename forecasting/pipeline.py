@@ -270,7 +270,7 @@ def save_forecast_plot_svg(
     actual_points = " ".join(f"{scale_x(i):.2f},{scale_y(v):.2f}" for i, v in enumerate(actual))
     pred_points = " ".join(f"{scale_x(i):.2f},{scale_y(v):.2f}" for i, v in enumerate(predicted))
 
-    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    _ensure_parent_directory(output_path)
     with open(output_path, "w", encoding="utf-8") as handle:
         handle.write(
             f"""<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}">
@@ -292,12 +292,18 @@ def _write_forecast_csv(
     actual: Sequence[float],
     predicted: Sequence[float],
 ) -> None:
-    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    _ensure_parent_directory(output_path)
     with open(output_path, "w", encoding="utf-8", newline="") as handle:
         writer = csv.writer(handle)
         writer.writerow(["datetime", "actual_demand_mw", "forecast_demand_mw"])
         for dt, a, p in zip(timestamps, actual, predicted):
             writer.writerow([dt.isoformat(sep=" "), f"{a:.6f}", f"{p:.6f}"])
+
+
+def _ensure_parent_directory(file_path: str) -> None:
+    parent = os.path.dirname(file_path)
+    if parent:
+        os.makedirs(parent, exist_ok=True)
 
 
 def run_forecasting_pipeline(

@@ -11,6 +11,7 @@ from forecasting.pipeline import (
     rmse,
     run_forecasting_pipeline,
     time_based_split,
+    walk_forward_splits,
 )
 
 
@@ -92,6 +93,11 @@ class PipelineTests(unittest.TestCase):
             forecast = persistence_forecast_walk_forward([1.0, 2.0, 3.0], [4.0, 5.0])
             self.assertEqual(forecast, [3.0, 4.0])
             self.assertAlmostEqual(rmse([4.0, 5.0], forecast), ((1.0 + 1.0) / 2.0) ** 0.5)
+
+    def test_walk_forward_splits_progression(self):
+        splits = list(walk_forward_splits(length=10, initial_train_size=4, step_size=2))
+        as_ranges = [((s.start, s.stop), (t.start, t.stop)) for s, t in splits]
+        self.assertEqual(as_ranges, [((0, 4), (4, 6)), ((0, 6), (6, 8)), ((0, 8), (8, 10))])
 
 
 if __name__ == "__main__":
