@@ -99,4 +99,4 @@ A user-friendly Streamlit dashboard was developed for real-time forecasting.
 ## 👨‍💻 Author
 
 **Md Siyam Hossain**  
-Data Science & Machine Learning Enthusiast
+Aspiring Data Scientist | Machine Learning & AI Enthusiast
